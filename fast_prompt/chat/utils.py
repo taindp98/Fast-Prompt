@@ -30,7 +30,15 @@ unit_price = {
     "gpt-4o": {
         "prompt_tokens": 5,
         "completion_tokens": 15,
-    }
+    },
+    "gemini-1.5-pro": {
+        "prompt_tokens": 0.5,
+        "completion_tokens": 2,
+    },
+    "gemini-1.5-flash-latest": {
+        "prompt_tokens": 0.5,
+        "completion_tokens": 2,
+    },
 }
 
 supported_batch_api_llm_models = [

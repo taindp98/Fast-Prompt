@@ -25,11 +25,14 @@ class ChatGemini:
             Sends a request to the Gemini API with the provided prompt and question, and returns the response.
     """
     def __init__(
-        self
+        self,
+        llm_model: str = "gemini-1.5-pro",
     ) -> None:
-
-        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={}"
-        self.api_url = self.api_url.format(os.getenv("GEMINI_API_KEY"))
+        supported_llm_models = list(unit_price.keys())
+        assert (
+            llm_model in supported_llm_models
+        ), f"`llm_model` should be in {supported_llm_models}"
+        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{llm_model}:generateContent?key={os.getenv('GEMINI_API_KEY')}"
         self.headers = {
             "Content-Type": "application/json"
         }
@@ -120,11 +123,14 @@ class ChatVisionGemini:
             Sends a request to the Gemini API with the provided prompt and question, and returns the response.
     """
     def __init__(
-        self
+        self,
+        llm_model: str = "gemini-1.5-pro",
     ) -> None:
-
-        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={}"
-        self.api_url = self.api_url.format(os.getenv("GEMINI_API_KEY"))
+        supported_llm_models = list(unit_price.keys())
+        assert (
+            llm_model in supported_llm_models
+        ), f"`llm_model` should be in {supported_llm_models}"
+        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{llm_model}:generateContent?key={os.getenv('GEMINI_API_KEY')}"
         self.headers = {
             "Content-Type": "application/json"
         }
