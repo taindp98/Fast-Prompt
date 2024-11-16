@@ -22,8 +22,9 @@ Fast-Prompt is a robust logging module designed to capture and manage API reques
 
 ## Update
 - [TBD]: Support more LLM APIs providers.
+- **Nov 16th, 2024**: Support Gemini Pro API for both text and vision.
 - **August 12th, 2024**: Support for the Batch API to OpenAI inference, reducing costs by half.
-- **August 1st, 2024**: Track OpenAI API usage for both text [`ChatOpenAI`](/fast_prompt/chat/chat_openai.py) and vision [`ChatOpenAIVision`](/fast_prompt/chat/chat_openai.py) requests.
+- **August 1st, 2024**: Support OpenAI API usage for both text [`ChatOpenAI`](/fast_prompt/chat/chat_openai.py) and vision [`ChatVisionOpenAI`](/fast_prompt/chat/chat_openai.py) requests.
 
 ## Quickstart
 

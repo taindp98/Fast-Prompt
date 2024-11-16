@@ -10,7 +10,7 @@ from tqdm import tqdm
 from IPython.display import Image, display
 import time
 
-from fast_prompt.chat.utils import unit_price
+from fast_prompt.chat.utils import unit_price, encode_image
 
 load_dotenv()
 
@@ -264,7 +264,7 @@ class ChatOpenAI:
         print(response)
 
 
-class ChatOpenAIVision:
+class ChatVisionOpenAI:
     """
     A class to interact with OpenAI's vision-enhanced language model for generating responses based on text and images.
 
@@ -274,9 +274,7 @@ class ChatOpenAIVision:
         client (OpenAI): The OpenAI client initialized with the API key.
 
     Methods:
-        encode_image(image_path):
-            Encodes an image file to a base64 string.
-
+        
         question_image(url, user_prompt, max_tokens=1024, temperature=1e-4):
             Sends a request to the OpenAI API with the provided prompt and image URL or file path, and returns the response.
     """
@@ -300,22 +298,10 @@ class ChatOpenAIVision:
         self.client = OpenAI(api_key=open_api_key)
         self.llm_model = llm_model
 
-    def encode_image(self, image_path):
-        """
-        Encodes an image file to a base64 string.
-
-        Args:
-            image_path (str): The path to the image file.
-
-        Returns:
-            str: The base64-encoded string of the image.
-        """
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode("utf-8")
-
+    
     def request(
         self,
-        image_url: str,
+        image_path: str,
         user_prompt: str,
         max_tokens: int = 1024,
         temperature: float = 1e-4,
@@ -325,7 +311,7 @@ class ChatOpenAIVision:
         Sends a request to the OpenAI API with the provided prompt and image URL or file path, and returns the response.
 
         Args:
-            image_url (str): The URL of the image or the local file path to the image.
+            image_path (str): The URL of the image or the local file path to the image.
             user_prompt (str): The prompt or question to ask the model.
             max_tokens (int): The maximum number of tokens to generate. Default is 1024.
             temperature (float): Sampling temperature to control the randomness of the response. Default is 1e-4.
@@ -334,9 +320,9 @@ class ChatOpenAIVision:
             dict: A dictionary containing the request ID, output, completion tokens, prompt tokens, and total tokens.
         """
 
-        if "http" in image_url:
+        if "http" in image_path:
             if show_preview:
-                display(Image(url=image_url))
+                display(Image(url=image_path))
             messages = [
                 {
                     "role": "user",
@@ -344,7 +330,7 @@ class ChatOpenAIVision:
                         {"type": "text", "text": f"{user_prompt}"},
                         {
                             "type": "image_url",
-                            "image_url": image_url,
+                            "image_url": image_path,
                         },
                     ],
                 }
@@ -357,8 +343,8 @@ class ChatOpenAIVision:
             )
         else:
             if show_preview:
-                display(Image(filename=image_url))
-            base64_image = self.encode_image(image_url)
+                display(Image(filename=image_path))
+            base64_image = encode_image(image_path)
             messages = [
                 {
                     "role": "user",

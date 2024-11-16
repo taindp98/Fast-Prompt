@@ -1,3 +1,5 @@
+import base64
+
 # Pricing per 1M tokens for different models
 # Ref: https://openai.com/api/pricing/
 unit_price = {
@@ -37,3 +39,16 @@ supported_batch_api_llm_models = [
     "gpt-4o-mini",
     "gpt-4o-mini-2024-07-18",
 ]
+
+def encode_image(image_path: str):
+    """
+    Encodes an image file to a base64 string.
+
+    Args:
+        image_path (str): The path to the image file.
+
+    Returns:
+        str: The base64-encoded string of the image.
+    """
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
