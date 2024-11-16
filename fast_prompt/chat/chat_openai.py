@@ -5,14 +5,12 @@ from dotenv import load_dotenv
 import json
 import pandas as pd
 import base64
-import copy
 import requests
 from tqdm import tqdm
 from IPython.display import Image, display
 import time
 
-from loggify_llm.mongodb import MongoDBLogger
-from loggify_llm.chat.utils import unit_price
+from fast_prompt.chat.utils import unit_price
 
 load_dotenv()
 
@@ -33,8 +31,6 @@ class ChatOpenAI:
     def __init__(
         self,
         llm_model: str = "gpt-4o-mini",
-        safely_request: bool = False,
-        collection_name=None,
         verbose: bool = False
     ):
         """
@@ -42,26 +38,17 @@ class ChatOpenAI:
 
         Args:
             llm_model (str): The language model to use. Default is "gpt-4o-mini".
-            safely_request (bool): Turn default quota per day.
-            collection_name (str): The name of log collection in DB.
         """
         super().__init__()
         open_api_key = os.environ.get("OPENAI_API_KEY")
         assert open_api_key, "OPENAI_API_KEY environment variable not set"
         self.client = OpenAI(api_key=open_api_key)
-        self.safely_request = safely_request
         self.verbose = verbose
         supported_llm_models = list(unit_price.keys())
         assert (
             llm_model in supported_llm_models
         ), f"`llm_model` should be in {supported_llm_models}"
-        self.llm_model = llm_model
-        self.collection_name = collection_name
-        if self.collection_name:
-            self.mongo_logger = MongoDBLogger(collection_name=self.collection_name)
-        else:
-            self.mongo_logger = None
-        
+        self.llm_model = llm_model        
         print(f"Initialize LLM model: {llm_model}")
 
     def request(
@@ -97,12 +84,6 @@ class ChatOpenAI:
                 "content": user_prompt,
             },
         ]
-        if self.mongo_logger:
-            allow_request = self.mongo_logger.is_within_daily_quota() if self.safely_request else True
-            assert (
-                allow_request
-            ), f"👾 Error: You have exceeded the daily quota of ${self.mongo_logger.default_quota_by_day}."
-
         response = self.client.chat.completions.create(
             messages=messages,
             model=self.llm_model,
@@ -128,12 +109,6 @@ class ChatOpenAI:
             "prompt_tokens": response.usage.prompt_tokens,
             "total_tokens": response.usage.total_tokens,
         }
-        if self.mongo_logger:
-            try:
-                self.mongo_logger.insert_one(data=result)
-            except Exception as e:
-                if self.verbose:
-                    print(f"👾 Warning: Failed to insert DB because: {e}")
 
         return result
 
@@ -282,13 +257,6 @@ class ChatOpenAI:
                 }
                 results.append(result)
         
-        if self.mongo_logger:
-            try:
-                insert_results = copy.deepcopy(results)
-                self.mongo_logger.insert_many(data=insert_results)
-            except Exception as e:
-                if self.verbose:
-                    print(f"👾 Warning: Failed to insert DB because: {e}")
         return results
 
     def batch_cancel(self, batch_job):
@@ -316,16 +284,12 @@ class ChatOpenAIVision:
     def __init__(
         self,
         llm_model: str = "gpt-4-vision-preview",
-        safely_request: bool = False,
-        collection_name=None,
     ):
         """
         Initializes the ChatVision class with the specified language model.
 
         Args:
             - llm_model (str): The language model to use. Default is "gpt-4-vision-preview".
-            - safely_request (bool): Turn default quota per day.
-            - collection_name (str): Name of log collection in DB.
         """
         open_api_key = os.environ.get("OPENAI_API_KEY")
         assert open_api_key, "OPENAI_API_KEY environment variable not set"
@@ -333,14 +297,8 @@ class ChatOpenAIVision:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {open_api_key}",
         }
-        self.safely_request = safely_request
         self.client = OpenAI(api_key=open_api_key)
         self.llm_model = llm_model
-        self.collection_name = collection_name
-        if self.collection_name:
-            self.mongo_logger = MongoDBLogger(collection_name=self.collection_name)
-        else:
-            self.mongo_logger = None
 
     def encode_image(self, image_path):
         """
@@ -391,14 +349,7 @@ class ChatOpenAIVision:
                     ],
                 }
             ]
-            if self.mongo_logger:
-                allow_request = (
-                    self.mongo_logger.is_within_daily_quota() if self.safely_request else True
-                )
-                assert (
-                    allow_request
-                ), f"👾 Error: You have exceeded the daily quota of ${self.mongo_logger.default_quota_by_day}."
-
+            
             response = self.client.chat.completions.create(
                 model=self.llm_model,
                 messages=messages,
@@ -426,14 +377,7 @@ class ChatOpenAIVision:
                 "messages": messages,
                 "max_tokens": max_tokens,
             }
-            if self.mongo_logger:
-                allow_request = (
-                    self.mongo_logger.is_within_daily_quota() if self.safely_request else True
-                )
-                assert (
-                    allow_request
-                ), f"👾 Error: You have exceeded the daily quota of ${self.mongo_logger.default_quota_by_day}."
-
+            
             response = requests.post(
                 url="https://api.openai.com/v1/chat/completions",
                 headers=self.headers,
@@ -458,11 +402,7 @@ class ChatOpenAIVision:
             "prompt_tokens": response.usage.prompt_tokens,
             "total_tokens": response.usage.total_tokens,
         }
-        if self.mongo_logger:
-            try:
-                self.mongo_logger.insert_one(data=result)
-            except Exception as e:
-                print(f"👾 Warning: Failed to insert DB because: {e}")
+        
         return result
 
 class DotDict(dict):

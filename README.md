@@ -1,19 +1,18 @@
 <h1>
-  <img alt="lograg_bg" src="./docs/images/lograg_bg.png" style="width: 100%;">
+  <!-- <img alt="lograg_bg" src="./docs/images/lograg_bg.png" style="width: 100%;"> -->
   <p align="center">
-	Loggify-LLM
+	Fast-Prompt
   </p>
 </h1>
 
 <p align="center">
     <img alt="OpenAI" src="https://img.shields.io/badge/OpenAI-000000?logo=openai&logoColor=white&style=flat" />
-<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white&style=flat" />
 <a href="./notebooks/example.ipynb">
         <img alt="Jupyter Notebook" src="https://img.shields.io/badge/Jupyter_Notebook-F37626?logo=jupyter&logoColor=white&style=flat" />
     </a>
 </p>
 
-Loggify-LLM is a robust logging module designed to capture and manage API requests for large language models. Enhance your project's observability and debugging capabilities with seamless request tracking and detailed logging.
+Fast-Prompt is a robust logging module designed to capture and manage API requests for large language models. Enhance your project's observability and debugging capabilities with seamless request tracking and detailed logging.
 
 ## Table of Contents
 
@@ -24,7 +23,7 @@ Loggify-LLM is a robust logging module designed to capture and manage API reques
 ## Update
 - [TBD]: Support more LLM APIs providers.
 - **August 12th, 2024**: Support for the Batch API to OpenAI inference, reducing costs by half.
-- **August 1st, 2024**: Track OpenAI API usage for both text [`ChatOpenAI`](/loggify_llm/chat/chat_openai.py) and vision [`ChatOpenAIVision`](/loggify_llm/chat/chat_openai.py) requests.
+- **August 1st, 2024**: Track OpenAI API usage for both text [`ChatOpenAI`](/fast_prompt/chat/chat_openai.py) and vision [`ChatOpenAIVision`](/fast_prompt/chat/chat_openai.py) requests.
 
 ## Quickstart
 
@@ -38,55 +37,35 @@ The structure of source code:
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
 │
-├── pyproject.toml     <- Project configuration file with package metadata for loggify_llm
+├── pyproject.toml     <- Project configuration file with package metadata for fast_prompt
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
-└── loggify_llm                <- Source code for use in this project.
+└── fast_prompt                <- Source code for use in this project.
     │
-    ├── __init__.py    <- Makes loggify_llm a Python module
+    ├── __init__.py    <- Makes fast_prompt a Python module
 ```
 
 Let’s install the library
 
 ```bash
-git clone https://github.com/taindp98/Loggify-LLM.git
-cd Loggify-LLM
+git clone https://github.com/taindp98/Fast-Prompt.git
+cd Fast-Prompt
 pip install -r requirements.txt
 ```
 
 alternative installation from a specific commit hash, use the following command:
 
 ```bash
-pip install git+https://github.com/taindp98/Loggify-LLM.git@commit-hash
-```
-
-**Prerequisite**: Setting Up MongoDB
-
-```bash
-docker compose up
-```
-
-Create the `.env` file containing `OPENAI_API_KEY` the connection to the `MongoDB`
-
-```
-## OPENAI
-OPENAI_API_KEY=sk-***
-
-## MONGODB
-COLLECTION_NAME=<your-collection-name>
-DB_NAME=<your-database-name>
-CLUSTER_ADDRESS=<your-cluster-ip-address>
-USRNAME=<provided-user-name>
-PASSWD=<provided-password>
+pip install git+https://github.com/taindp98/Fast-Prompt.git@commit-hash
 ```
 
 An example for logging a certain LLM request:
 
 ```python
-from loggify_llm.chat.chat_openai import ChatOpenAI
+from fast_prompt.chat.chat_openai import ChatOpenAI
 
 llm = ChatOpenAI()
 
@@ -136,10 +115,6 @@ the output follows:
   "total_tokens": 304
 }
 ```
-
-Dashboard of MongoDB should be looked like
-
-![](./docs/images/collection_browser.png)
 
 ## Contributing
 
