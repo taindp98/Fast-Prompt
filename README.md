@@ -41,7 +41,7 @@ The structure of source code:
 ├── pyproject.toml      <- Project configuration file with package metadata for fast_prompt
 ├── requirements.txt    <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
-|
+│
 ├── setup.cfg           <- Configuration file for flake8
 ├── .env                <- LLM provider API key.
 └── fast_prompt         <- Source code for use in this project.
