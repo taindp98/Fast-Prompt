@@ -12,7 +12,7 @@
     </a>
 </p>
 
-Fast-Prompt is a robust logging module designed to capture and manage API requests for large language models. Enhance your project's observability and debugging capabilities with seamless request tracking and detailed logging.
+Fast-Prompt is a simple module designed to capture and manage API requests for large language models.
 
 ## Table of Contents
 
@@ -31,22 +31,20 @@ Fast-Prompt is a robust logging module designed to capture and manage API reques
 The structure of source code:
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
+├── LICENSE             <- Open-source license if one is chosen
+├── Makefile            <- Makefile with convenience commands like `make data` or `make train`
+├── README.md           <- The top-level README for developers using this project.
+├── notebooks           <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
 │
-├── pyproject.toml     <- Project configuration file with package metadata for fast_prompt
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
+├── pyproject.toml      <- Project configuration file with package metadata for fast_prompt
+├── requirements.txt    <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── fast_prompt                <- Source code for use in this project.
-    │
-    ├── __init__.py    <- Makes fast_prompt a Python module
+|
+├── setup.cfg           <- Configuration file for flake8
+├── .env                <- LLM provider API key.
+└── fast_prompt         <- Source code for use in this project.
 ```
 
 Let’s install the library
@@ -61,6 +59,12 @@ alternative installation from a specific commit hash, use the following command:
 
 ```bash
 pip install git+https://github.com/taindp98/Fast-Prompt.git@commit-hash
+```
+
+Generate an API key from your chosen LLM provider and put the API key in the `.env` file located in the root path of this repository:
+
+```
+OPENAI_API_KEY=sk-***
 ```
 
 An example for logging a certain LLM request:
@@ -89,7 +93,6 @@ print(response)
 the output follows:
 
 ```bash
-🔥 Successfully Log Request to Database
 {
   "request_id": "chatcmpl-9t5nxsAIVMEcbsT4yrd3B1Y7iIpLG",
   "llm_model": "gpt-3.5-turbo-instruct",
